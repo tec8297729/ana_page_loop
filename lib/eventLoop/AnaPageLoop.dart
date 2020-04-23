@@ -49,7 +49,7 @@ class AnaPageLoop {
     @required UserPageCallbackFn beginPageFn,
     @required UserPageCallbackFn endPageFn,
     List<String> routeRegExp = const [],
-    bool debug = true,
+    bool debug = false,
   }) {
     if (_initFlag) return;
     _userBeginPageFn = beginPageFn;

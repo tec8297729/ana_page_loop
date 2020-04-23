@@ -2,6 +2,16 @@
 
 建议用在不太复杂的埋点场景中使用。
 
+## 安装插件
+
+在pubspec.yamlflutter项目的中，添加以下依赖项：<br>
+
+```
+dependencies:
+  ...
+  ana_page_loop: ^x.x.x // 指定插件版本
+```
+
 ## 使用方式
 
 1、在MyApp入口处初始化anaPageLoop.init，并且添加监听对象anaAllObs。<br>
@@ -21,6 +31,7 @@ class MyApp extends StatelessWidget {
         // 加入第三方统计代码(结束统计)
       },
       routeRegExp: ['/home', '/accountPage'], // 指定过滤的路由，当PageView或Tab组件要单独统计时，当前路由名称需要过滤掉。
+      debug: false, // 是否开启调试，会输出路由栈相关信息
     );
     return MaterialApp(
       // ...

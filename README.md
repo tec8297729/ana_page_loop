@@ -4,7 +4,7 @@
 
 ## 安装插件
 
-在pubspec.yamlflutter项目的中，添加以下依赖项：<br>
+在flutter项目中的pubspec.yaml，添加以下依赖项：<br>
 
 ```
 dependencies:

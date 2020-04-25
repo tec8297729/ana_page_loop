@@ -65,6 +65,18 @@ class _HomeState extends State<Home> with PageViewListenerMixin {
                 BtnWidget('子页面MyTabsPage', () {
                   Navigator.pushNamed(context, 'MyTabsPage');
                 }),
+                BtnWidget('手动离开首页', () {
+                  anaPageLoop.endPageView('首页');
+                }),
+                BtnWidget('手动开始A', () {
+                  anaPageLoop.beginPageView('A页面');
+                }),
+                BtnWidget('手动结束A', () {
+                  anaPageLoop.endPageView('A页面');
+                }),
+                BtnWidget('关闭流', () {
+                  anaPageLoop.close();
+                }),
               ],
             ),
           ),

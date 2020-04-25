@@ -66,8 +66,11 @@ class AnaPageLoop {
         }
 
         if (debug) {
+          String _tagTitle =
+              (routeData.state == _IRouterState.enter) ? '进栈' : '出栈';
           String text = '';
-          for (var i = 0; i < _routeStack.length; i++) {
+          final _len = _routeStack.length;
+          for (var i = 0; i < _len; i++) {
             if (i != 0) {
               text += ',';
             }
@@ -82,12 +85,11 @@ class AnaPageLoop {
             logStr = """$logStr
 警告提示：当前路由长时间未找到结束节点路由，并且路由队列栈数量过多，请正确配置过滤指定路由，降低性能消耗""";
           }
-
-          print("""=====================路由栈信息=====================
+          print("""=====================路由栈信息($_tagTitle)=====================
 $logStr""");
         }
       } catch (e) {
-        throw e;
+        if (debug) print(e);
       }
     });
     _initFlag = true;
@@ -103,43 +105,46 @@ $logStr""");
     }
 
     _routeStack.add(routeData);
-    await _routeLoop();
-  }
-
-  /// 处理更新route栈
-  Future<void> _routeLoop() async {
-    bool loopFlag = false;
-    // 更新lastRoute路由信息
-    int len = _routeStack.length;
-    for (var i = 0; i < len; i++) {
-      if (_routeStack[i].state == _IRouterState.exit &&
-          _routeStack[i].name == _lastRoute.name) {
-        await _anaLoopEndPageFn(_lastRoute.name);
-        _lastRoute = _routeStack.removeAt(i);
-        loopFlag = true;
-        await _anaLoopBeginPageFn(_lastRoute.name);
-        break;
-      }
-    }
-
-    if (loopFlag) await _routeLoop();
   }
 
   /// 路由监听，退出状态的路由数据
   Future<void> _handleExitState(_IStreamData routeData) async {
-    if (_lastRoute.name == routeData.name) {
-      await _anaLoopEndPageFn(routeData.name);
-
-      if (_routeStack.length == 0) {
-        _lastRoute = _IStreamData();
-      } else {
-        _lastRoute = _routeStack.removeAt(0);
-        await _anaLoopBeginPageFn(_lastRoute.name);
-      }
-      return;
-    }
-    // 未匹配压栈
     _routeStack.add(routeData);
+    await _routeExitLoop();
+  }
+
+  Future<void> _routeExitLoop() async {
+    bool loopFlag = false;
+    int len = _routeStack.length;
+    for (var i = 0; i < len; i++) {
+      if (_routeStack[i].state == _IRouterState.exit &&
+          _routeStack[i].name == _lastRoute.name) {
+        // 结束当前栈
+        _routeStack.removeAt(i);
+        await _anaLoopEndPageFn(_lastRoute.name);
+
+        await _updataLastRoute(); // 更新当前栈
+        loopFlag = true;
+        break;
+      }
+    }
+
+    if (loopFlag) await _routeExitLoop();
+  }
+
+  /// 更新lastRoute路由信息
+  Future<void> _updataLastRoute() async {
+    final int len = _routeStack.length;
+    if (len == 0) {
+      _lastRoute = _IStreamData();
+    }
+    for (var i = 0; i < len; i++) {
+      if (_routeStack[i].state == _IRouterState.enter) {
+        _lastRoute = _routeStack.removeAt(i);
+        await _anaLoopBeginPageFn(_lastRoute.name);
+        break;
+      }
+    }
   }
 
   // _delay(Duration timeDur, VoidCallback callback) {
@@ -160,7 +165,7 @@ $logStr""");
 
   /// 埋点统计开始
   Future<void> beginPageView(String name) async {
-    if (_routeFilter(name)) return;
+    if (_routeFilter(name) || !_streamCtr.hasListener) return;
     _streamCtr.sink.add(_IStreamData(
       name: name,
       state: _IRouterState.enter,
@@ -170,7 +175,7 @@ $logStr""");
 
   /// 埋点统计结束
   Future<void> endPageView(String name) async {
-    if (_routeFilter(name)) return;
+    if (_routeFilter(name) || !_streamCtr.hasListener) return;
     _streamCtr.sink.add(_IStreamData(
       name: name,
       state: _IRouterState.exit,
@@ -186,12 +191,12 @@ $logStr""");
     return reg;
   }
 
-  /// 关闭终止流
+  /// 关闭anaPageLoop监听流，关闭后不在处理任何事件，不可在次恢复流
   close() => _streamCtr.close();
 
-  /// 暂停监听流,可被唤醒
+  /// 临时暂停anaPageLoop监听流，可被唤醒
   pause() => _streamCtr.onPause();
 
-  /// 唤醒pause的流
+  /// 唤醒anaPageLoop流
   resume() => _streamCtr.onResume();
 }

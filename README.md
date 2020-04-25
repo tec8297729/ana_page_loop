@@ -46,6 +46,20 @@ class MyApp extends StatelessWidget {
 <br>
 常规页面监听埋点处理完成，如有tab切换页面独立统计的，需要单独配置继承类<br><br>
 
+anaPageLoop相关方法介绍<br>
+
+```dart
+import 'package:ana_page_loop/ana_page_loop.dart' show anaPageLoop;
+
+// 手动添加某页面埋点，传入当前页面名称（自定义）。只有特殊需求才需要手动添加
+anaPageLoop.beginPageView('A页面'); // A页面 开始统计，和endPageView配对使用
+anaPageLoop.endPageView('A页面'); // A页面 结束统计
+
+anaPageLoop.pause(); // 临时暂停anaPageLoop监听流，可被唤醒
+anaPageLoop.resume(); // 唤醒anaPageLoop流
+
+anaPageLoop.close(); /// 完全关闭anaPageLoop监听流
+```
 
 ## PageViewListenerMixin类介绍
 <br>

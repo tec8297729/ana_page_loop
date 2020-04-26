@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'package:flutter/cupertino.dart';
 
 enum _IRouterState {
@@ -31,10 +32,10 @@ class AnaPageLoop {
   _IStreamData _lastRoute = _IStreamData(); // 上一次路由
   List<_IStreamData> _routeStack = []; // 路由栈
   StreamController<_IStreamData> _streamCtr = StreamController<_IStreamData>();
-  Stream streamPeriodic;
   UserPageCallbackFn _userBeginPageFn;
   UserPageCallbackFn _userEndPageFn;
   List<String> _routeRegExp = []; // 过滤的路由名称
+  SplayTreeMap<String, String> _routeNameDic = SplayTreeMap<String, String>();
 
   /// 初始化AnaPageLoop
   ///
@@ -50,11 +51,17 @@ class AnaPageLoop {
     @required UserPageCallbackFn endPageFn,
     List<String> routeRegExp = const [],
     bool debug = false,
+    Map<String, String> routeName = const {},
   }) {
     if (_initFlag) return;
     _userBeginPageFn = beginPageFn;
     _userEndPageFn = endPageFn;
     _routeRegExp = routeRegExp;
+
+    if (routeName?.isNotEmpty ?? false) {
+      _routeNameDic.addAll(routeName);
+      print(_routeNameDic['首页']);
+    }
 
     _streamCtr.stream.listen((routeData) async {
       try {
@@ -167,7 +174,7 @@ $logStr""");
   Future<void> beginPageView(String name) async {
     if (_routeFilter(name) || !_streamCtr.hasListener) return;
     _streamCtr.sink.add(_IStreamData(
-      name: name,
+      name: _routeNameDic[name] ?? name,
       state: _IRouterState.enter,
       // time: DateTime.now(),
     ));
@@ -177,7 +184,7 @@ $logStr""");
   Future<void> endPageView(String name) async {
     if (_routeFilter(name) || !_streamCtr.hasListener) return;
     _streamCtr.sink.add(_IStreamData(
-      name: name,
+      name: _routeNameDic[name] ?? name,
       state: _IRouterState.exit,
       // time: DateTime.now(),
     ));
@@ -187,7 +194,6 @@ $logStr""");
   bool _routeFilter(String name) {
     String regStr = ['null', ..._routeRegExp].join('|');
     bool reg = RegExp(r"^(" + regStr + ")").hasMatch(name ?? "null");
-    // print('过滤判断>>>${reg}');
     return reg;
   }
 

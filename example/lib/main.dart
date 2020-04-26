@@ -22,6 +22,11 @@ class _MyAppState extends State<MyApp> {
       },
       routeRegExp: ['/', 'MyTabsPage'], // 过滤路由
       debug: true,
+      // 自定义替换路由名称， key原始路由名称: value新路由名称
+      routeName: {
+        '首页': '美改页',
+        'Search': '二级页面S',
+      },
     );
   }
 

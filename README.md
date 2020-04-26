@@ -32,6 +32,12 @@ class MyApp extends StatelessWidget {
       },
       routeRegExp: ['/home', '/accountPage'], // 指定过滤的路由，当PageView或Tab组件要单独统计时，当前路由名称需要过滤掉。
       debug: false, // 是否开启调试，会输出路由栈相关信息
+      // 自定义替换路由名称(可选参数)，默认使用定义路由的名称
+      routeName: {
+        //  key原始路由名称: value新路由名称
+        '/home': '热门新闻',
+        '/search': '搜索页面',
+      },
     );
     return MaterialApp(
       // ...
@@ -46,7 +52,20 @@ class MyApp extends StatelessWidget {
 <br>
 常规页面监听埋点处理完成，如有tab切换页面独立统计的，需要单独配置继承类<br><br>
 
-anaPageLoop相关方法介绍<br>
+
+anaPageLoop.init参数介绍<br>
+
+|    参数     |        类型         |                          说明                          |
+| :---------: | :-----------------: | :----------------------------------------------------: |
+| beginPageFn |      Function       | 添加第三方埋点统计代码beginPageFn，与endPageFn配对使用 |
+|  endPageFn  |      Function       |       添加第三方埋点统计代码endPageFn，结束统计        |
+| routeRegExp |    List<String>     |                自定义过滤某些的路由统计                |
+|    debug    |        bool         |           是否开启调试，会输出路由栈相关信息           |
+|  routeName  | Map<String, String> |        自定义替换原始路由名称，用于埋点统计名称        |
+
+
+
+### anaPageLoop相关方法介绍<br>
 
 ```dart
 import 'package:ana_page_loop/ana_page_loop.dart' show anaPageLoop;

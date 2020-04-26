@@ -1,6 +1,6 @@
 name: ana_page_loop
 description: flutter routePage Analytics plugin，Try to explore a page to monitor plug-ins
-version: 0.1.2
+version: 0.1.3
 homepage: https://github.com/tec8297729/ana_page_loop
 
 environment:

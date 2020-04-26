@@ -55,13 +55,13 @@ class MyApp extends StatelessWidget {
 
 anaPageLoop.init参数介绍<br>
 
-|    参数     |        类型         |                          说明                          |
-| :---------: | :-----------------: | :----------------------------------------------------: |
-| beginPageFn |      Function       | 添加第三方埋点统计代码beginPageFn，与endPageFn配对使用 |
-|  endPageFn  |      Function       |       添加第三方埋点统计代码endPageFn，结束统计        |
-| routeRegExp |    List<String>     |                自定义过滤某些的路由统计                |
-|    debug    |        bool         |           是否开启调试，会输出路由栈相关信息           |
-|  routeName  | Map<String, String> |        自定义替换原始路由名称，用于埋点统计名称        |
+|    参数     |        类型         | default |                          说明                          |
+| :---------: | :-----------------: | :-----: | :----------------------------------------------------: |
+| beginPageFn |      Function       |         | 添加第三方埋点统计代码beginPageFn，与endPageFn配对使用 |
+|  endPageFn  |      Function       |         |       添加第三方埋点统计代码endPageFn，结束统计        |
+| routeRegExp |    List<String>     |         |                自定义过滤某些的路由统计                |
+|    debug    |        bool         |  false  |           是否开启调试，会输出路由栈相关信息           |
+|  routeName  | Map<String, String> |         |        自定义替换原始路由名称，用于埋点统计名称        |
 
 
 

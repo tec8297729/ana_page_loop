@@ -60,7 +60,6 @@ class AnaPageLoop {
 
     if (routeName?.isNotEmpty ?? false) {
       _routeNameDic.addAll(routeName);
-      print(_routeNameDic['首页']);
     }
 
     _streamCtr.stream.listen((routeData) async {

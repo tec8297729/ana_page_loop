@@ -15,7 +15,8 @@ class _HomeState extends State<Home> with PageViewListenerMixin {
   @override
   void initState() {
     super.initState();
-    pageController = PageController();
+    initPageCtr();
+    WidgetsBinding.instance.addPostFrameCallback((v) {});
   }
 
   @override
@@ -24,6 +25,10 @@ class _HomeState extends State<Home> with PageViewListenerMixin {
       controller: pageController,
       tabsData: ['首页', '搜索', '分类', '会员中心'],
     );
+  }
+
+  void initPageCtr() {
+    pageController = PageController();
   }
 
   @override

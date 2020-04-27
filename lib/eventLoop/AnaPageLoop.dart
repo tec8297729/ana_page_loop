@@ -85,6 +85,7 @@ class AnaPageLoop {
           }
           String logStr = """
 当前路由: ${_lastRoute.name}
+$_tagTitle 信息：name: ${routeData.name}, state: ${routeData.state}
 路由队列栈数量: ${_routeStack.length}
 路由队列栈: [$text]""";
           if (_routeStack.length > 100) {
@@ -128,7 +129,6 @@ $logStr""");
         // 结束当前栈
         _routeStack.removeAt(i);
         await _anaLoopEndPageFn(_lastRoute.name);
-
         await _updataLastRoute(); // 更新当前栈
         loopFlag = true;
         break;

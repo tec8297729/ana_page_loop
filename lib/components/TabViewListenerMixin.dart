@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../observer/AnaControllerObs.dart';
 import '../eventLoop/AnaPageLoop.dart' show anaPageLoop;
-import '../utils/anaLog.dart';
 
 class TabViewMixinData {
   /// tab控制器
@@ -22,10 +21,9 @@ class TabViewMixinData {
 mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
     implements RouteAware {
   TabViewMixinData _tabViewMixinData;
-  int _oldTabIdx; // 上次位置
-  int _cacheIndex = 0; // tab索引缓存
-  Map<int, String> _tabNameData = Map();
-  bool _initAnalyzeFlag = false;
+  int _anaOldTabIdx; // 上次位置
+  int _anaCacheIndex = 0; // tab索引缓存
+  Map<int, String> _anaTabNameData = Map();
 
   @override
   void initState() {
@@ -57,22 +55,20 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
     List<String> tabsData = _tabViewMixinData.tabsData;
     TabController tabCtr = _tabViewMixinData.controller;
     for (var i = 0; i < tabsData.length; i++) {
-      _tabNameData[i] = tabsData[i];
+      _anaTabNameData[i] = tabsData[i];
     }
 
     tabCtr.addListener(() {
-      _cacheIndex = tabCtr.index;
-      String newPageName = _tabNameData[_cacheIndex];
-      if (newPageName != null && _cacheIndex != _oldTabIdx) {
-        AnaLog.p(_tabNameData[tabCtr.index]);
-        if (_oldTabIdx != null) {
-          // 结束统计
-          anaPageLoop.endPageView(_tabNameData[_oldTabIdx]);
+      _anaCacheIndex = tabCtr.index;
+      String newPageName = _anaTabNameData[_anaCacheIndex];
+      if (newPageName != null && _anaCacheIndex != _anaOldTabIdx) {
+        if (_anaOldTabIdx != null) {
+          anaPageLoop.endPageView(_anaTabNameData[_anaOldTabIdx]); // 结束统计
         }
 
         // 开始统计
         anaPageLoop.beginPageView(newPageName);
-        _oldTabIdx = _cacheIndex;
+        _anaOldTabIdx = _anaCacheIndex;
       }
     });
   }
@@ -81,19 +77,16 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
   @protected
   void didPopNext() {
     // next回退
-    AnaLog.p(
-        'tabViewMixin.didPopNext>>>${_tabViewMixinData.controller?.index}');
-    _oldTabIdx = _tabViewMixinData.controller?.index;
-    String pageName = _tabNameData[_oldTabIdx];
+    _anaOldTabIdx = _tabViewMixinData.controller?.index;
+    String pageName = _anaTabNameData[_anaOldTabIdx];
     anaPageLoop.beginPageView(pageName);
   }
 
   @mustCallSuper
   @required
   void didPop() {
-    AnaLog.p('tabViewMixin.didPop》》》${_tabViewMixinData.controller?.index}');
-    _oldTabIdx = _tabViewMixinData.controller?.index;
-    String pageName = _tabNameData[_oldTabIdx];
+    _anaOldTabIdx = _tabViewMixinData.controller?.index;
+    String pageName = _anaTabNameData[_anaOldTabIdx];
     anaPageLoop.endPageView(pageName);
   }
 
@@ -101,19 +94,15 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
   @required
   void didPush() {
     // 跳转当前页面,替换路由
-    AnaLog.p('tabViewMixin.didPush');
     WidgetsBinding.instance.addPostFrameCallback((v) {
-      if (_initAnalyzeFlag) return;
-      _initAnalyzeFlag = true;
-      AnaLog.p(
-          'tabViewMixin._pushAnalyze  ${_tabViewMixinData.controller?.index}');
-      anaPageLoop
-          .beginPageView(_tabNameData[_tabViewMixinData.controller?.index]);
-      if (_oldTabIdx != null) {
-        // 结束统计
-        anaPageLoop.endPageView(_tabNameData[_oldTabIdx]);
+      if (_tabViewMixinData != null) {
+        anaPageLoop.beginPageView(
+            _anaTabNameData[_tabViewMixinData.controller?.index]);
+        if (_anaOldTabIdx != null) {
+          anaPageLoop.endPageView(_anaTabNameData[_anaOldTabIdx]); // 结束统计
+        }
+        _anaOldTabIdx = _tabViewMixinData.controller?.index;
       }
-      _oldTabIdx = _tabViewMixinData.controller?.index;
     });
   }
 
@@ -121,9 +110,6 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
   @required
   void didPushNext() {
     // 跳转其它页面，单纯push
-    AnaLog.p('tabViewMixin.didPushNext');
-    // 结束统计
-    anaPageLoop.endPageView(_tabNameData[_oldTabIdx]);
-    _initAnalyzeFlag = false;
+    anaPageLoop.endPageView(_anaTabNameData[_anaOldTabIdx]);
   }
 }

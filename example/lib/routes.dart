@@ -1,10 +1,9 @@
-import 'package:ana_page_loop_example/pages/SplashPage/SplashPage.dart';
 import 'package:flutter/material.dart';
-
 import 'pages/AccountPage/AccountPage.dart';
 import 'pages/Home/Home.dart';
 import 'pages/MyTabsPage/MyTabsPage.dart';
 import 'pages/Search/Search.dart';
+import 'pages/SplashPage/SplashPage.dart';
 
 final Map<String, WidgetBuilder> routesData = {
   '/': (BuildContext context, {params}) => SplashPage(),

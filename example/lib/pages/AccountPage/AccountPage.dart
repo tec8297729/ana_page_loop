@@ -1,7 +1,7 @@
-import 'package:ana_page_loop_example/components/RoutsAnimation/RoutsAnimation.dart';
-import 'package:ana_page_loop_example/pages/components/BtnWidget.dart';
-import 'package:ana_page_loop_example/pages/home/home.dart';
 import 'package:flutter/material.dart';
+import '../../components/RoutsAnimation/RoutsAnimation.dart';
+import '../Home/Home.dart';
+import '../components/BtnWidget.dart';
 
 class AccountPage extends StatefulWidget {
   @override

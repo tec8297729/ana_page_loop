@@ -1,5 +1,5 @@
-import 'package:ana_page_loop_example/pages/components/BtnWidget.dart';
 import 'package:flutter/material.dart';
+import '../components/BtnWidget.dart';
 
 class Search extends StatefulWidget {
   @override

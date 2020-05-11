@@ -1,6 +1,7 @@
-import 'package:ana_page_loop_example/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:ana_page_loop/ana_page_loop.dart';
+
+import 'routes.dart';
 
 void main() => runApp(MyApp());
 

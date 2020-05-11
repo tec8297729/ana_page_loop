@@ -1,6 +1,6 @@
-import 'package:ana_page_loop_example/pages/components/BtnWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:ana_page_loop/ana_page_loop.dart';
+import '../components/BtnWidget.dart';
 
 class MyTabsPage extends StatefulWidget {
   @override

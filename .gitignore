@@ -9,6 +9,7 @@
 .history
 .svn/
 initGit.bat
+# /example/
 
 # IntelliJ related
 *.iml

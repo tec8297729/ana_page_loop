@@ -15,7 +15,6 @@ class AnalyticsObs extends NavigatorObserver {
   void didPush(Route route, Route previousRoute) {
     super.didPush(route, previousRoute);
     String routeName = route?.settings?.name ?? 'null';
-    print('push触发');
     if (routeName != 'null') {
       analytics(route, previousRoute);
     }

@@ -25,6 +25,7 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
   double _anaOldPage; // 上次位置
   double _anaCacheIndex = 0;
   Map<double, String> _anaPageNameData = Map();
+  // bool _pushAnaFlag2147483648 = false;
 
   @override
   void initState() {
@@ -78,6 +79,7 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
   void didPopNext() {
     // next回退
     _popAnalyze(false);
+    // _pushAnaFlag2147483648 = false;
   }
 
   @mustCallSuper
@@ -102,6 +104,8 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
   void didPush() {
     // 跳转当前页面,替换路由
     WidgetsBinding.instance.addPostFrameCallback((v) {
+      // if (_pushAnaFlag2147483648) return; // 禁止重复
+      // _pushAnaFlag2147483648 = true;
       if (_pageViewMixinData != null) {
         anaPageLoop.beginPageView(
             _anaPageNameData[_pageViewMixinData.controller.page]);

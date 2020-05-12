@@ -28,7 +28,7 @@ class _AccountPageState extends State<AccountPage> {
               context,
               RoutsAnimation(
                 child: Home(),
-                settings: RouteSettings(name: '/'),
+                settings: RouteSettings(name: '/home'),
               ),
               (Route<dynamic> route) => false,
             );

@@ -122,7 +122,6 @@ $logStr""");
         if (_routeStack[i].state == _IRouterState.enter &&
             _lastRoute.name == _routeStack[i].name) {
           _routeStack.removeAt(i); // 移除相同
-          print('thgj删除');
           break;
         }
       }

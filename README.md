@@ -17,9 +17,8 @@ dependencies:
 1、在MyApp入口处初始化anaPageLoop.init，并且添加监听对象anaAllObs。<br>
 
 ```dart
-// ...省略
 import 'package:ana_page_loop/ana_page_loop.dart' show anaPageLoop, anaAllObs;
-// ...
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -32,15 +31,13 @@ class MyApp extends StatelessWidget {
       },
       routeRegExp: ['/home', '/accountPage'], // 指定过滤的路由，当PageView或Tab组件要单独统计时，当前路由名称需要过滤掉。
       debug: false, // 是否开启调试，会输出路由栈相关信息
-      // 自定义替换路由名称(可选参数)，默认使用定义路由的名称
+      // 自定义替换路由名称(可选参数)，用于自定义埋点统计名称
       routeName: {
-        //  key原始路由名称: value新路由名称
-        '/home': '热门新闻',
+        '/home': '热门新闻', // 将原始/home路由名称 替换成 热门新闻
         '/search': '搜索页面',
       },
     );
     return MaterialApp(
-      // ...
       navigatorObservers: [
         // 添加路由监听
         ...anaAllObs(),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ana_page_loop/ana_page_loop.dart';
-
 import '../components/BtnWidget.dart';
 import 'HomeTabsPage.dart';
 

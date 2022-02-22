@@ -8,7 +8,7 @@ class BtnWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: RaisedButton(
+      child: ElevatedButton(
         child: Text(text),
         onPressed: fn,
       ),

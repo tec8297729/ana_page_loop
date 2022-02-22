@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../observer/ana_all_obs.dart';
 import '../event_loop/ana_page_loop.dart' show anaPageLoop;
+import '../observer/ana_controller_obs.dart';
 
 class PageViewMixinData {
   PageController controller;
@@ -11,8 +11,8 @@ class PageViewMixinData {
   List<String> tabsData;
 
   PageViewMixinData({
-    @required this.controller,
-    @required this.tabsData,
+    required this.controller,
+    required this.tabsData,
   });
 }
 
@@ -21,8 +21,8 @@ class PageViewMixinData {
 /// 使用方式：继承在组件页面中，并且实现initPageViewListener方法，传入具体参数，以及调用RouteAware类上的相关方法
 mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
     implements RouteAware {
-  PageViewMixinData _pageViewMixinData;
-  double _anaOldPage; // 上次位置
+  late PageViewMixinData _pageViewMixinData;
+  double? _anaOldPage; // 上次位置
   double _anaCacheIndex = 0;
   Map<double, String> _anaPageNameData = Map();
   // bool _pushAnaFlag2147483648 = false;
@@ -30,20 +30,19 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((v) {
-      _pageViewMixinData = initPageViewListener();
-      assert(_pageViewMixinData != null);
+    WidgetsBinding.instance?.addPostFrameCallback((v) {
+      _pageViewMixinData = initPageViewListener()!;
       _handleTabListener();
     });
   }
 
   /// 自动初始化PageViewListenerMixin所需要的参数
-  PageViewMixinData initPageViewListener() => null;
+  PageViewMixinData? initPageViewListener() => null;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    anaControllerObs.subscribe(this, ModalRoute.of(context));
+    anaControllerObs.subscribe(this, ModalRoute.of(context) as PageRoute);
   }
 
   @override
@@ -54,17 +53,18 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
 
   /// 监听tab
   void _handleTabListener() {
-    PageController pageCtr = _pageViewMixinData.controller;
+    PageController? pageCtr = _pageViewMixinData.controller;
     List<String> tabsData = _pageViewMixinData.tabsData;
     for (var i = 0; i < tabsData.length; i++) {
       _anaPageNameData[i.toDouble()] = tabsData[i];
     }
-    pageCtr?.addListener(() {
-      _anaCacheIndex = pageCtr.page;
-      String newPageName = _anaPageNameData[_anaCacheIndex];
+    pageCtr.addListener(() {
+      _anaCacheIndex = pageCtr.page!;
+      String? newPageName = _anaPageNameData[_anaCacheIndex];
       if (newPageName != null && _anaCacheIndex != _anaOldPage) {
         if (_anaOldPage != null) {
-          anaPageLoop.endPageView(_anaPageNameData[_anaOldPage]); // 结束统计
+          var pageName = _anaPageNameData[_anaOldPage];
+          if (pageName != null) anaPageLoop.endPageView(pageName); // 结束统计
         }
 
         // 开始统计
@@ -91,11 +91,11 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
   /// 回退统计
   _popAnalyze(bool isEnd) {
     _anaOldPage = _pageViewMixinData.controller.page;
-    String pageName = _anaPageNameData[_anaOldPage];
+    var pageName = _anaPageNameData[_anaOldPage];
     if (isEnd) {
-      anaPageLoop.endPageView(pageName);
+      if (pageName != null) anaPageLoop.endPageView(pageName);
     } else {
-      anaPageLoop.beginPageView(pageName);
+      if (pageName != null) anaPageLoop.beginPageView(pageName);
     }
   }
 
@@ -103,14 +103,15 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
   @required
   void didPush() {
     // 跳转当前页面,替换路由
-    WidgetsBinding.instance.addPostFrameCallback((v) {
+    WidgetsBinding.instance?.addPostFrameCallback((v) {
       // if (_pushAnaFlag2147483648) return; // 禁止重复
       // _pushAnaFlag2147483648 = true;
+      // ignore: unnecessary_null_comparison
       if (_pageViewMixinData != null) {
         anaPageLoop.beginPageView(
-            _anaPageNameData[_pageViewMixinData.controller.page]);
+            _anaPageNameData[_pageViewMixinData.controller.page]!);
         if (_anaOldPage != null) {
-          anaPageLoop.endPageView(_anaPageNameData[_anaOldPage]); // 结束统计
+          anaPageLoop.endPageView(_anaPageNameData[_anaOldPage]!); // 结束统计
         }
         _anaOldPage = _pageViewMixinData.controller.page;
       }
@@ -121,6 +122,6 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
   @required
   void didPushNext() {
     // 跳转其它页面，单纯push
-    anaPageLoop.endPageView(_anaPageNameData[_anaOldPage]);
+    anaPageLoop.endPageView(_anaPageNameData[_anaOldPage]!);
   }
 }

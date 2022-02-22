@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'package:flutter/cupertino.dart';
 
 enum _IRouterState {
   /// 页面进入
@@ -12,13 +11,13 @@ enum _IRouterState {
 
 class _IStreamData {
   /// 路由名称
-  String name;
+  String? name;
 
   /// 路由状态
-  _IRouterState state;
+  _IRouterState? state;
 
   /// 时间
-  DateTime time;
+  DateTime? time;
 
   _IStreamData({this.name, this.state, this.time});
 }
@@ -33,8 +32,8 @@ class AnaPageLoop {
   _IStreamData _lastRoute = _IStreamData(); // 上一次路由
   List<_IStreamData> _routeStack = []; // 路由栈
   StreamController<_IStreamData> _streamCtr = StreamController<_IStreamData>();
-  UserPageCallbackFn _userBeginPageFn;
-  UserPageCallbackFn _userEndPageFn;
+  late UserPageCallbackFn _userBeginPageFn;
+  late UserPageCallbackFn _userEndPageFn;
   List<String> _routeRegExp = []; // 过滤的路由名称
   SplayTreeMap<String, String> _routeNameDic = SplayTreeMap<String, String>();
 
@@ -48,8 +47,8 @@ class AnaPageLoop {
   ///
   /// [debug] 是否开启调式模式，输出路由栈信息相关
   init({
-    @required UserPageCallbackFn beginPageFn,
-    @required UserPageCallbackFn endPageFn,
+    required UserPageCallbackFn beginPageFn,
+    required UserPageCallbackFn endPageFn,
     List<String> routeRegExp = const [],
     bool debug = false,
     Map<String, String> routeName = const {},
@@ -60,7 +59,7 @@ class AnaPageLoop {
     _routeRegExp = routeRegExp;
     _debug = debug;
 
-    if (routeName?.isNotEmpty ?? false) {
+    if (routeName.isNotEmpty) {
       _routeNameDic.addAll(routeName);
     }
 
@@ -71,7 +70,7 @@ class AnaPageLoop {
   // loop流监听
   _streamCtrListen(_IStreamData routeData) async {
     try {
-      if (routeData.name.isNotEmpty && routeData.state == _IRouterState.enter) {
+      if (routeData.name != null && routeData.state == _IRouterState.enter) {
         await _handleEnterState(routeData);
       } else {
         await _handleExitState(routeData);
@@ -109,7 +108,7 @@ $logStr""");
   /// 路由监听，进入状态的路由数据
   Future<void> _handleEnterState(_IStreamData routeData) async {
     // 初次路由
-    if (_lastRoute?.name?.isEmpty ?? true) {
+    if (_lastRoute.name?.isEmpty ?? true) {
       _lastRoute = routeData;
       await _anaLoopBeginPageFn(routeData.name);
       return;
@@ -142,7 +141,7 @@ $logStr""");
           _routeStack[i].name == _lastRoute.name) {
         // 结束当前栈
         _routeStack.removeAt(i);
-        await _anaLoopEndPageFn(_lastRoute.name);
+        await _anaLoopEndPageFn(_lastRoute.name!);
         await _updataLastRoute(); // 更新当前栈
         loopFlag = true;
         break;
@@ -172,14 +171,12 @@ $logStr""");
   // }
 
   /// 第三方统计开始
-  _anaLoopBeginPageFn(String routeName) async {
-    assert(_userBeginPageFn != null);
-    _userBeginPageFn(routeName);
+  _anaLoopBeginPageFn(String? routeName) async {
+    _userBeginPageFn(routeName!);
   }
 
   /// 第三方统计结束
   Future<void> _anaLoopEndPageFn(String routeName) async {
-    assert(_userEndPageFn != null);
     _userEndPageFn(routeName);
   }
 
@@ -208,7 +205,7 @@ $logStr""");
   /// 过滤指定路由名称
   bool _routeFilter(String name) {
     String regStr = ['null', ..._routeRegExp].join('|');
-    bool reg = RegExp(r"^(" + regStr + ")").hasMatch(name ?? "null");
+    bool reg = RegExp(r"^(" + regStr + ")").hasMatch(name);
     return reg;
   }
 
@@ -216,8 +213,8 @@ $logStr""");
   close() => _streamCtr.close();
 
   /// 临时暂停anaPageLoop监听流，可被唤醒
-  pause() => _streamCtr.onPause();
+  pause() => _streamCtr.onPause!();
 
   /// 唤醒anaPageLoop流
-  resume() => _streamCtr.onResume();
+  resume() => _streamCtr.onResume!();
 }

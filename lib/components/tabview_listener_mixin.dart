@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../observer/ana_all_obs.dart';
 import '../event_loop/ana_page_loop.dart' show anaPageLoop;
+import '../observer/ana_controller_obs.dart' show anaControllerObs;
 
 class TabViewMixinData {
   /// tab控制器
@@ -10,8 +10,8 @@ class TabViewMixinData {
   List<String> tabsData;
 
   TabViewMixinData({
-    @required this.controller,
-    @required this.tabsData,
+    required this.controller,
+    required this.tabsData,
   });
 }
 
@@ -20,28 +20,27 @@ class TabViewMixinData {
 /// 使用方式：继承在组件页面中，并且实现initPageViewListener方法，传入具体参数，以及调用RouteAware类上的相关方法，用法和PageViewListenerMixin类相同
 mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
     implements RouteAware {
-  TabViewMixinData _tabViewMixinData;
-  int _anaOldTabIdx; // 上次位置
+  late TabViewMixinData _tabViewMixinData;
+  int? _anaOldTabIdx; // 上次位置
   int _anaCacheIndex = 0; // tab索引缓存
   Map<int, String> _anaTabNameData = Map();
 
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((v) {
-      _tabViewMixinData = initPageViewListener();
-      assert(_tabViewMixinData != null);
+    WidgetsBinding.instance?.addPostFrameCallback((v) {
+      _tabViewMixinData = initPageViewListener()!;
       _handleTabListener();
     });
   }
 
   /// 初始化tabViewMixin所需要的参数
-  TabViewMixinData initPageViewListener() => null;
+  TabViewMixinData? initPageViewListener() => null;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    anaControllerObs.subscribe(this, ModalRoute.of(context));
+    anaControllerObs.subscribe(this, ModalRoute.of(context) as PageRoute);
   }
 
   @override
@@ -60,10 +59,10 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
 
     tabCtr.addListener(() {
       _anaCacheIndex = tabCtr.index;
-      String newPageName = _anaTabNameData[_anaCacheIndex];
+      String? newPageName = _anaTabNameData[_anaCacheIndex];
       if (newPageName != null && _anaCacheIndex != _anaOldTabIdx) {
         if (_anaOldTabIdx != null) {
-          anaPageLoop.endPageView(_anaTabNameData[_anaOldTabIdx]); // 结束统计
+          anaPageLoop.endPageView(_anaTabNameData[_anaOldTabIdx]!); // 结束统计
         }
 
         // 开始统计
@@ -77,16 +76,16 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
   @protected
   void didPopNext() {
     // next回退
-    _anaOldTabIdx = _tabViewMixinData.controller?.index;
-    String pageName = _anaTabNameData[_anaOldTabIdx];
+    _anaOldTabIdx = _tabViewMixinData.controller.index;
+    String pageName = _anaTabNameData[_anaOldTabIdx]!;
     anaPageLoop.beginPageView(pageName);
   }
 
   @mustCallSuper
   @required
   void didPop() {
-    _anaOldTabIdx = _tabViewMixinData.controller?.index;
-    String pageName = _anaTabNameData[_anaOldTabIdx];
+    _anaOldTabIdx = _tabViewMixinData.controller.index;
+    String pageName = _anaTabNameData[_anaOldTabIdx]!;
     anaPageLoop.endPageView(pageName);
   }
 
@@ -94,15 +93,13 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
   @required
   void didPush() {
     // 跳转当前页面,替换路由
-    WidgetsBinding.instance.addPostFrameCallback((v) {
-      if (_tabViewMixinData != null) {
-        anaPageLoop.beginPageView(
-            _anaTabNameData[_tabViewMixinData.controller?.index]);
-        if (_anaOldTabIdx != null) {
-          anaPageLoop.endPageView(_anaTabNameData[_anaOldTabIdx]); // 结束统计
-        }
-        _anaOldTabIdx = _tabViewMixinData.controller?.index;
+    WidgetsBinding.instance?.addPostFrameCallback((v) {
+      anaPageLoop
+          .beginPageView(_anaTabNameData[_tabViewMixinData.controller.index]!);
+      if (_anaOldTabIdx != null) {
+        anaPageLoop.endPageView(_anaTabNameData[_anaOldTabIdx]!); // 结束统计
       }
+      _anaOldTabIdx = _tabViewMixinData.controller.index;
     });
   }
 
@@ -110,6 +107,6 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
   @required
   void didPushNext() {
     // 跳转其它页面，单纯push
-    anaPageLoop.endPageView(_anaTabNameData[_anaOldTabIdx]);
+    anaPageLoop.endPageView(_anaTabNameData[_anaOldTabIdx]!);
   }
 }

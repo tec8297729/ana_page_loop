@@ -134,7 +134,7 @@ class _HomeState extends State<Home> with PageViewListenerMixin {
           Icons.account_circle, // 图标
           size: 28,
         ),
-        title: Text('页面$idx'),
+        label: '页面$idx',
       ));
     }
     return list;

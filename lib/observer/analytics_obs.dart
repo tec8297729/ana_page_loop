@@ -3,18 +3,18 @@ import '../event_loop/ana_page_loop.dart' show anaPageLoop;
 
 /// 监听路由
 class AnalyticsObs extends NavigatorObserver {
-  analytics(Route route, Route previousRoute) {
-    String routeName = route?.settings?.name ?? 'null';
-    String lastRouteName = previousRoute?.settings?.name ?? 'null';
+  analytics(Route? route, Route? previousRoute) {
+    String routeName = route?.settings.name ?? 'null';
+    String lastRouteName = previousRoute?.settings.name ?? 'null';
     anaPageLoop.endPageView(lastRouteName);
     anaPageLoop.beginPageView(routeName);
   }
 
   // push跳转路由时触发
   @override
-  void didPush(Route route, Route previousRoute) {
+  void didPush(route, previousRoute) {
     super.didPush(route, previousRoute);
-    String routeName = route?.settings?.name ?? 'null';
+    String routeName = route.settings.name ?? 'null';
     if (routeName != 'null') {
       analytics(route, previousRoute);
     }
@@ -22,9 +22,9 @@ class AnalyticsObs extends NavigatorObserver {
 
   // pop回退路由时触发
   @override
-  void didPop(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didPop(route, previousRoute) {
     super.didPop(route, previousRoute);
-    String routeName = route?.settings?.name ?? 'null';
+    String routeName = route.settings.name ?? 'null';
     // popUntil
     if (routeName != 'null') {
       analytics(previousRoute, route);
@@ -33,7 +33,7 @@ class AnalyticsObs extends NavigatorObserver {
 
   // remove移除路由时触发
   @override
-  void didRemove(Route<dynamic> route, Route<dynamic> previousRoute) {
+  void didRemove(route, previousRoute) {
     super.didRemove(route, previousRoute);
     // print('移除路由>>>>${route.settings.name ?? 'null'}');
     // analytics(previousRoute, route);
@@ -41,9 +41,9 @@ class AnalyticsObs extends NavigatorObserver {
 
   /// 路由被替换时触发
   @override
-  void didReplace({Route<dynamic> newRoute, Route<dynamic> oldRoute}) {
+  void didReplace({Route<dynamic>? newRoute, Route<dynamic>? oldRoute}) {
     super.didReplace();
-    String routeName = newRoute?.settings?.name ?? 'null';
+    String routeName = newRoute?.settings.name ?? 'null';
     if (routeName != 'null') {
       analytics(newRoute, oldRoute);
     }

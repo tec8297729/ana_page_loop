@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../eventLoop/AnaPageLoop.dart' show anaPageLoop;
+import '../event_loop/ana_page_loop.dart' show anaPageLoop;
 
 /// 监听路由
 class AnalyticsObs extends NavigatorObserver {

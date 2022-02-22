@@ -46,9 +46,8 @@ class MyApp extends StatelessWidget {
   }
 }
 ```
-<br>
-常规页面监听埋点处理完成，如有tab切换页面独立统计的，需要单独配置继承类<br><br>
 
+常规页面监听埋点处理完成，如有tab切换页面独立统计的，需要单独配置继承类<br><br>
 
 anaPageLoop.init参数介绍<br>
 
@@ -59,8 +58,6 @@ anaPageLoop.init参数介绍<br>
 | routeRegExp |    List<String>     |         |                自定义过滤某些的路由统计                |
 |    debug    |        bool         |  false  |           是否开启调试，会输出路由栈相关信息           |
 |  routeName  | Map<String, String> |         |        自定义替换原始路由名称，用于埋点统计名称        |
-
-
 
 ### anaPageLoop相关方法介绍<br>
 
@@ -78,6 +75,7 @@ anaPageLoop.close(); /// 完全关闭anaPageLoop监听流
 ```
 
 ## PageViewListenerMixin类介绍
+
 <br>
 监听带有PageController类的组件页面，并且自动记录埋点事件。
 
@@ -142,6 +140,7 @@ class _HomeBarTabsState extends State<HomeBarTabs> with PageViewListenerMixin {
   }
 }
 ```
+
 <br>
 
 ## TabViewListenerMixin类介绍
@@ -211,4 +210,3 @@ class _AccountPageState extends State<HomeBarTabs> with SingleTickerProviderStat
   }
 }
 ```
-

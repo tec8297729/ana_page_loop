@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'AnaControllerObs.dart' show anaControllerObs;
-import 'AnalyticsObs.dart' show AnalyticsObs;
+import './ana_controller_bbs.dart' show anaControllerObs;
+import './analytics_obs.dart' show AnalyticsObs;
 
 /// 所有navigatorObservers监听对象
 List<NavigatorObserver> anaAllObs() {

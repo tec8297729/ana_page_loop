@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../observer/AnaControllerObs.dart';
-import '../eventLoop/AnaPageLoop.dart' show anaPageLoop;
+import '../observer/ana_all_obs.dart';
+import '../event_loop/ana_page_loop.dart' show anaPageLoop;
 
 class PageViewMixinData {
   PageController controller;

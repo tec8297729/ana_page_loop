@@ -11,12 +11,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with PageViewListenerMixin {
   int currentIndex = 0; // 接收bar当前点击索引
-  PageController pageController;
+  late PageController pageController;
   @override
   void initState() {
     super.initState();
     initPageCtr();
-    WidgetsBinding.instance.addPostFrameCallback((v) {});
+    WidgetsBinding.instance?.addPostFrameCallback((v) {});
   }
 
   @override

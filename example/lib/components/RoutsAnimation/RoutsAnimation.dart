@@ -12,14 +12,14 @@ import 'package:flutter/cupertino.dart';
 ///```
 class RoutsAnimation extends PageRoute {
   RoutsAnimation({
-    @required this.child, // 第一个自定义参数，其它的是PageRute必带参数
+    required this.child, // 第一个自定义参数，其它的是PageRute必带参数
     this.transitionDuration = const Duration(milliseconds: 600),
     this.opaque = true,
     this.barrierDismissible = false,
     this.barrierColor,
     this.barrierLabel,
     this.maintainState = true,
-    @required this.settings,
+    required this.settings,
   });
 
   /// 页面跳转显示的组件
@@ -35,10 +35,10 @@ class RoutsAnimation extends PageRoute {
   final bool barrierDismissible; // 是否可以通过点击模式障碍来消除此路线
 
   @override
-  final Color barrierColor; // 用于模式障碍的颜色。如果为null，则障碍将是透明的
+  final Color? barrierColor; // 用于模式障碍的颜色。如果为null，则障碍将是透明的
 
   @override
-  final String barrierLabel; // 障碍的语义标签，用于指定获取障碍目标
+  final String? barrierLabel; // 障碍的语义标签，用于指定获取障碍目标
 
   @override
   final bool maintainState; // 路由处于非活动状态时是否应保留在内存中

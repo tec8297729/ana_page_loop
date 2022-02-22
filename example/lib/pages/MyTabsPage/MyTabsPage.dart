@@ -14,7 +14,7 @@ class _MyTabsPageState extends State<MyTabsPage>
         TabViewListenerMixin {
   @override
   bool get wantKeepAlive => true;
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {

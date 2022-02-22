@@ -9,8 +9,8 @@ class AdPage extends StatefulWidget {
 
 class _AdPageState extends State<AdPage> {
   String _info = '';
-  Timer _timer;
-  int timeCount;
+  Timer? _timer;
+  late int timeCount;
 
   @override
   void initState() {

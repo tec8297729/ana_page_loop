@@ -4,14 +4,14 @@ import 'package:flutter/material.dart';
 
 /// 闪屏页。
 class SplashPage extends StatefulWidget {
-  SplashPage({Key key}) : super(key: key);
+  SplashPage({Key? key}) : super(key: key);
 
   @override
   _SplashPageState createState() => _SplashPageState();
 }
 
 class _SplashPageState extends State<SplashPage> {
-  Widget child;
+  late Widget child;
 
   @override
   void initState() {

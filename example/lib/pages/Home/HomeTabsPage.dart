@@ -12,7 +12,7 @@ class _HomeTabsPageState extends State<HomeTabsPage>
     with AutomaticKeepAliveClientMixin, SingleTickerProviderStateMixin {
   @override
   bool get wantKeepAlive => true;
-  TabController _tabController;
+  late TabController _tabController;
 
   @override
   void initState() {

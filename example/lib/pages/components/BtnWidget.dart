@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class BtnWidget extends StatelessWidget {
   BtnWidget(this.text, this.fn);
   final String text;
-  final Function fn;
+  final VoidCallback fn;
 
   @override
   Widget build(BuildContext context) {

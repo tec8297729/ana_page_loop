@@ -15,7 +15,7 @@ class _HomeState extends State<Home> with PageViewListenerMixin {
   void initState() {
     super.initState();
     initPageCtr();
-    WidgetsBinding.instance?.addPostFrameCallback((v) {});
+    WidgetsBinding.instance.addPostFrameCallback((v) {});
   }
 
   @override

@@ -30,7 +30,7 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((v) {
+    WidgetsBinding.instance.addPostFrameCallback((v) {
       _pageViewMixinData = initPageViewListener()!;
       _handleTabListener();
     });
@@ -103,7 +103,7 @@ mixin PageViewListenerMixin<T extends StatefulWidget> on State<T>
   @required
   void didPush() {
     // 跳转当前页面,替换路由
-    WidgetsBinding.instance?.addPostFrameCallback((v) {
+    WidgetsBinding.instance.addPostFrameCallback((v) {
       // if (_pushAnaFlag2147483648) return; // 禁止重复
       // _pushAnaFlag2147483648 = true;
       // ignore: unnecessary_null_comparison

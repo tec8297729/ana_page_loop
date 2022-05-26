@@ -1,5 +1,9 @@
 # 历史更新内容
 
+## 1.0.1
+
+> 修复警告Warning: Operand of null-aware operation '?.' has type 'WidgetsBinding' which excludes null.
+
 ## 1.0.0
 
 > sdk最低2.12.0兼容改造

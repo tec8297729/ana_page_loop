@@ -28,7 +28,7 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance?.addPostFrameCallback((v) {
+    WidgetsBinding.instance.addPostFrameCallback((v) {
       _tabViewMixinData = initPageViewListener()!;
       _handleTabListener();
     });
@@ -93,7 +93,7 @@ mixin TabViewListenerMixin<T extends StatefulWidget> on State<T>
   @required
   void didPush() {
     // 跳转当前页面,替换路由
-    WidgetsBinding.instance?.addPostFrameCallback((v) {
+    WidgetsBinding.instance.addPostFrameCallback((v) {
       anaPageLoop
           .beginPageView(_anaTabNameData[_tabViewMixinData.controller.index]!);
       if (_anaOldTabIdx != null) {
